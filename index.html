@@ -518,14 +518,21 @@ Génère le tableau JSON de ${count} questions :`;
       })
     });
 
+    const rawText = await response.text();
+    console.log("Function response status:", response.status);
+    console.log("Function response body:", rawText);
+
     if (!response.ok) {
-      const errData = await response.json().catch(() => ({}));
-      throw new Error(errData.error || "Erreur API " + response.status);
+      throw new Error("Function error " + response.status + ": " + rawText);
     }
 
-    const data = await response.json();
+    let data;
+    try { data = JSON.parse(rawText); } catch(e) { throw new Error("Réponse invalide de la function: " + rawText.substring(0, 200)); }
+
     const text = data.content?.map(b => b.text || "").join("") || "";
+    if (!text) throw new Error("Réponse vide de l'IA. Vérifiez la clé OPENAI_API_KEY dans Netlify.");
     const clean = text.replace(/```json|```/g, "").trim();
+    console.log("AI response text:", clean.substring(0, 200));
     quizQuestions = JSON.parse(clean);
     quizIdx = 0;
     quizScore = 0;
