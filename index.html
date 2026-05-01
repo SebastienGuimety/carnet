@@ -1,0 +1,675 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover, maximum-scale=1">
+<meta name="theme-color" content="#faf7f2">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<meta name="apple-mobile-web-app-title" content="Culture G">
+<title>Culture G — Le carnet</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300..900;1,9..144,300..900&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg: #faf7f2; --bg-el: #ffffff; --ink: #1a1814; --ink-soft: #6b645a; --ink-mute: #a39b8e;
+  --line: #e8e2d6; --accent: #c7522a; --accent-soft: #f4dcc8;
+  --green: #5a7a4e; --green-soft: #e0ead8; --amber: #c68c2c; --amber-soft: #f5e4c4;
+  --red: #b5503c; --red-soft: #f2d9d1; --safe-b: env(safe-area-inset-bottom, 0px);
+}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html{height:100%;-webkit-text-size-adjust:100%}
+body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--ink);font-size:15px;line-height:1.6;min-height:100%;-webkit-tap-highlight-color:transparent;overflow-x:hidden;background-image:radial-gradient(circle at 20% 10%,rgba(199,82,42,.04) 0%,transparent 50%),radial-gradient(circle at 80% 80%,rgba(184,137,58,.04) 0%,transparent 50%)}
+.serif{font-family:'Fraunces',serif}
+
+/* === SHARED === */
+.field{margin-bottom:16px}
+.field label{display:block;font-size:11px;letter-spacing:.12em;text-transform:uppercase;color:var(--ink-soft);margin-bottom:6px;font-weight:600}
+.field input,.field textarea,.field select{width:100%;background:var(--bg);border:1px solid var(--line);border-radius:6px;padding:12px;font-family:'Inter',sans-serif;font-size:16px;color:var(--ink);transition:border-color .15s,box-shadow .15s}
+.field input:focus,.field textarea:focus,.field select:focus{outline:none;border-color:var(--accent);box-shadow:0 0 0 3px var(--accent-soft)}
+.field textarea{resize:vertical;min-height:64px}
+.field select{cursor:pointer;appearance:none;background-image:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'><path d='M2 4l4 4 4-4' stroke='%236b645a' stroke-width='1.5' fill='none' stroke-linecap='round'/></svg>");background-repeat:no-repeat;background-position:right 12px center;padding-right:36px}
+.btn{width:100%;background:var(--ink);color:var(--bg);border:none;border-radius:6px;padding:14px;font-family:'Inter',sans-serif;font-size:14px;font-weight:600;letter-spacing:.06em;text-transform:uppercase;cursor:pointer;-webkit-appearance:none}
+.btn:hover{background:var(--accent)}.btn:active{opacity:.9}.btn:disabled{opacity:.4;cursor:not-allowed}
+.btn-accent{background:var(--accent)}.btn-accent:hover{background:var(--ink)}
+.btn-outline{background:transparent;color:var(--ink);border:1px solid var(--line)}.btn-outline:hover{border-color:var(--ink)}
+
+/* === LOGIN === */
+.login-wrap{min-height:100vh;display:flex;align-items:center;justify-content:center;padding:24px}
+.login-card{background:var(--bg-el);border:1px solid var(--line);border-radius:8px;padding:40px 28px;max-width:400px;width:100%;box-shadow:0 16px 48px rgba(26,24,20,.06);text-align:center}
+.login-mark{font-family:'Fraunces',serif;font-style:italic;font-size:48px;color:var(--accent);line-height:1;margin-bottom:8px}
+.login-title{font-family:'Fraunces',serif;font-size:32px;font-weight:400;margin-bottom:8px}
+.login-title em{font-style:italic;color:var(--accent)}
+.login-sub{font-size:14px;color:var(--ink-soft);margin-bottom:28px;font-style:italic}
+.login-form{text-align:left}
+.login-switch{margin-top:20px;padding-top:20px;border-top:1px solid var(--line);font-size:13px;color:var(--ink-soft);text-align:center}
+.link-btn{background:none;border:none;color:var(--accent);font-family:inherit;font-size:13px;font-weight:600;cursor:pointer;padding-left:4px;text-decoration:underline;text-underline-offset:3px}
+.msg-panel{background:var(--green-soft);border:1px solid var(--green);border-radius:6px;padding:14px;margin-top:16px;font-size:14px;text-align:center;line-height:1.5}
+.msg-panel strong{color:var(--green)}
+
+/* === APP === */
+.app{max-width:1280px;margin:0 auto;padding:32px 24px 120px}
+.app-header{display:flex;justify-content:space-between;align-items:flex-end;margin-bottom:32px;padding-bottom:24px;border-bottom:1px solid var(--line);gap:16px;flex-wrap:wrap}
+.brand{display:flex;flex-direction:column;gap:2px}
+.eyebrow{font-size:10px;letter-spacing:.2em;text-transform:uppercase;color:var(--ink-mute);font-weight:500}
+h1{font-family:'Fraunces',serif;font-size:42px;font-weight:400;line-height:1.05;letter-spacing:-.02em}
+h1 em{font-style:italic;color:var(--accent);font-weight:300}
+.header-right{display:flex;gap:24px;align-items:flex-end;flex-wrap:wrap}
+.stats-inline{display:flex;gap:20px}
+.stat{display:flex;flex-direction:column;gap:1px;text-align:right}
+.stat-num{font-family:'Fraunces',serif;font-size:28px;font-weight:400;line-height:1}
+.stat-label{font-size:9px;letter-spacing:.15em;text-transform:uppercase;color:var(--ink-mute);font-weight:500}
+.user-menu{display:flex;align-items:center;gap:10px;font-size:12px;color:var(--ink-soft)}
+.logout-btn{background:transparent;border:1px solid var(--line);border-radius:6px;padding:6px 12px;font-size:11px;letter-spacing:.08em;text-transform:uppercase;font-weight:600;color:var(--ink-soft);cursor:pointer;font-family:inherit}
+
+/* === TABS === */
+.tabs{display:flex;gap:0;margin-bottom:28px;border-bottom:2px solid var(--line)}
+.tab{flex:1;text-align:center;padding:12px;font-size:13px;font-weight:600;letter-spacing:.08em;text-transform:uppercase;color:var(--ink-mute);cursor:pointer;border-bottom:2px solid transparent;margin-bottom:-2px;transition:all .15s;font-family:inherit;background:none;border-top:none;border-left:none;border-right:none}
+.tab.active{color:var(--accent);border-bottom-color:var(--accent)}
+.tab:hover{color:var(--ink)}
+
+/* === FICHES VIEW === */
+.main-grid{display:grid;grid-template-columns:340px 1fr;gap:36px;align-items:start}
+.sidebar{background:var(--bg-el);border:1px solid var(--line);border-radius:8px;padding:24px;position:sticky;top:24px;box-shadow:0 8px 24px rgba(26,24,20,.04)}
+.form-title{font-family:'Fraunces',serif;font-size:20px;font-weight:400;margin-bottom:2px}
+.form-sub{font-size:13px;color:var(--ink-soft);margin-bottom:20px;font-style:italic}
+
+.toolbar{display:flex;gap:10px;align-items:center;flex-wrap:wrap;margin-bottom:20px}
+.search{flex:1;min-width:160px;position:relative}
+.search input{width:100%;background:var(--bg-el);border:1px solid var(--line);border-radius:6px;padding:11px 14px 11px 38px;font-family:'Inter',sans-serif;font-size:15px;color:var(--ink)}
+.search input:focus{outline:none;border-color:var(--accent);box-shadow:0 0 0 3px var(--accent-soft)}
+.search::before{content:"";position:absolute;left:13px;top:50%;transform:translateY(-50%);width:14px;height:14px;background:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='14' height='14' viewBox='0 0 14 14'><circle cx='6' cy='6' r='4.5' stroke='%236b645a' stroke-width='1.3' fill='none'/><path d='M9.5 9.5l3 3' stroke='%236b645a' stroke-width='1.3' stroke-linecap='round'/></svg>") no-repeat}
+.filter-select{background:var(--bg-el);border:1px solid var(--line);border-radius:6px;padding:11px 34px 11px 12px;font-family:'Inter',sans-serif;font-size:15px;color:var(--ink);cursor:pointer;appearance:none;background-image:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'><path d='M2 4l4 4 4-4' stroke='%236b645a' stroke-width='1.5' fill='none' stroke-linecap='round'/></svg>");background-repeat:no-repeat;background-position:right 12px center}
+
+.chips{display:flex;gap:8px;overflow-x:auto;-webkit-overflow-scrolling:touch;scrollbar-width:none;margin-bottom:24px;padding-bottom:16px;border-bottom:1px solid var(--line)}
+.chips::-webkit-scrollbar{display:none}
+.chip{padding:7px 14px;background:var(--bg-el);border:1px solid var(--line);border-radius:100px;font-size:13px;color:var(--ink-soft);cursor:pointer;display:inline-flex;align-items:center;gap:6px;font-family:inherit;white-space:nowrap;flex-shrink:0;transition:all .15s}
+.chip:hover{border-color:var(--ink-mute);color:var(--ink)}
+.chip.active{background:var(--ink);border-color:var(--ink);color:var(--bg)}
+.chip .count{font-size:11px;opacity:.6}
+
+.cards{display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:16px}
+.card{background:var(--bg-el);border:1px solid var(--line);border-radius:8px;padding:20px;display:flex;flex-direction:column;gap:10px;animation:fadeIn .25s ease}
+@keyframes fadeIn{from{opacity:0;transform:translateY(4px)}to{opacity:1;transform:translateY(0)}}
+.card-head{display:flex;justify-content:space-between;align-items:center}
+.card-cat{font-size:10px;letter-spacing:.14em;text-transform:uppercase;color:var(--ink-mute);font-weight:600}
+.card-dot{width:10px;height:10px;border-radius:50%;flex-shrink:0}
+.card-dot.new{background:var(--red)}.card-dot.progress{background:var(--amber)}.card-dot.acquired{background:var(--green)}
+.card-title{font-family:'Fraunces',serif;font-size:20px;line-height:1.3;font-weight:400}
+.card-body{font-size:14px;line-height:1.6;color:var(--ink-soft);white-space:pre-line}
+.card-comment{font-size:13px;color:var(--ink-mute);font-style:italic;line-height:1.5;border-top:1px dashed var(--line);padding-top:10px}
+.card-actions{display:flex;gap:8px;margin-top:auto;padding-top:6px}
+.card-btn{flex:1;background:transparent;border:1px solid var(--line);border-radius:6px;padding:8px;font-family:'Inter',sans-serif;font-size:11px;letter-spacing:.08em;text-transform:uppercase;font-weight:600;color:var(--ink-soft);cursor:pointer}
+.card-btn:active{background:var(--line)}.card-btn.danger:active{background:var(--red-soft);color:var(--red)}
+
+.empty{grid-column:1/-1;text-align:center;padding:60px 20px}
+.empty-icon{font-family:'Fraunces',serif;font-size:64px;font-style:italic;color:var(--line);line-height:1;margin-bottom:12px}
+.empty-text{font-family:'Fraunces',serif;font-size:18px;font-style:italic;color:var(--ink-soft)}
+.empty-sub{font-size:13px;color:var(--ink-mute);margin-top:6px}
+
+/* === QUIZ VIEW === */
+.quiz-setup{max-width:560px;margin:0 auto;text-align:center;padding:40px 0}
+.quiz-setup-title{font-family:'Fraunces',serif;font-size:32px;font-style:italic;color:var(--accent);margin-bottom:8px}
+.quiz-setup-sub{font-size:14px;color:var(--ink-soft);margin-bottom:32px}
+.quiz-options{display:flex;flex-direction:column;gap:12px;margin-bottom:24px;text-align:left}
+.quiz-options .field{margin-bottom:0}
+.quiz-start{max-width:300px;margin:0 auto}
+
+.quiz-area{max-width:640px;margin:0 auto}
+.quiz-progress{display:flex;align-items:center;gap:12px;margin-bottom:24px;font-size:13px;color:var(--ink-soft)}
+.quiz-bar{flex:1;height:4px;background:var(--line);border-radius:2px;overflow:hidden}
+.quiz-bar-fill{height:100%;background:var(--accent);border-radius:2px;transition:width .3s ease}
+.quiz-score{font-weight:600;color:var(--green)}
+
+.quiz-card{background:var(--bg-el);border:1px solid var(--line);border-radius:8px;padding:28px;box-shadow:0 8px 24px rgba(26,24,20,.04);animation:fadeIn .3s ease}
+.quiz-card-cat{font-size:10px;letter-spacing:.14em;text-transform:uppercase;color:var(--ink-mute);font-weight:600;margin-bottom:12px}
+.quiz-card-q{font-family:'Fraunces',serif;font-size:24px;line-height:1.3;margin-bottom:24px}
+
+/* QCM */
+.qcm-options{display:flex;flex-direction:column;gap:10px}
+.qcm-opt{background:var(--bg);border:1px solid var(--line);border-radius:6px;padding:14px 16px;font-size:15px;cursor:pointer;text-align:left;font-family:inherit;color:var(--ink);transition:all .15s;display:flex;align-items:center;gap:12px}
+.qcm-opt:hover{border-color:var(--ink-mute);background:var(--bg-el)}
+.qcm-opt .letter{width:28px;height:28px;border-radius:50%;background:var(--line);display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700;flex-shrink:0;transition:all .15s}
+.qcm-opt:hover .letter{background:var(--ink-mute);color:var(--bg)}
+.qcm-opt.correct{border-color:var(--green);background:var(--green-soft)}.qcm-opt.correct .letter{background:var(--green);color:#fff}
+.qcm-opt.wrong{border-color:var(--red);background:var(--red-soft)}.qcm-opt.wrong .letter{background:var(--red);color:#fff}
+.qcm-opt.disabled{pointer-events:none;opacity:.6}
+.qcm-opt.disabled.correct{opacity:1}
+
+/* Open */
+.open-answer-zone{margin-top:16px}
+.open-reveal{margin-top:16px}
+.open-answer{background:var(--bg);border-left:3px solid var(--accent);padding:14px 16px;border-radius:0 6px 6px 0;font-size:15px;line-height:1.5;margin-bottom:16px}
+.open-self{display:flex;gap:10px;justify-content:center}
+.open-self button{padding:10px 20px;border-radius:6px;font-family:inherit;font-size:13px;font-weight:600;cursor:pointer;border:1px solid var(--line);background:var(--bg-el);color:var(--ink)}
+.open-self .good{border-color:var(--green);color:var(--green)}.open-self .good:hover{background:var(--green-soft)}
+.open-self .bad{border-color:var(--red);color:var(--red)}.open-self .bad:hover{background:var(--red-soft)}
+
+.quiz-next{margin-top:24px;text-align:center}
+.quiz-next button{padding:12px 32px;background:var(--ink);color:var(--bg);border:none;border-radius:6px;font-family:inherit;font-size:14px;font-weight:600;cursor:pointer;letter-spacing:.06em;text-transform:uppercase}
+.quiz-next button:hover{background:var(--accent)}
+
+/* Results */
+.quiz-results{text-align:center;padding:40px 0}
+.quiz-results-score{font-family:'Fraunces',serif;font-size:72px;color:var(--accent);line-height:1;margin-bottom:8px}
+.quiz-results-label{font-size:14px;color:var(--ink-soft);margin-bottom:32px}
+.quiz-results-actions{display:flex;gap:12px;justify-content:center;flex-wrap:wrap}
+.quiz-results-actions button{padding:12px 24px;border-radius:6px;font-family:inherit;font-size:14px;font-weight:600;cursor:pointer;border:none;letter-spacing:.06em;text-transform:uppercase}
+
+/* Loading spinner */
+.quiz-loading{text-align:center;padding:60px 0}
+.spinner{width:40px;height:40px;border:3px solid var(--line);border-top-color:var(--accent);border-radius:50%;animation:spin .8s linear infinite;margin:0 auto 16px}
+@keyframes spin{to{transform:rotate(360deg)}}
+.quiz-loading-text{font-size:13px;color:var(--ink-soft);font-style:italic}
+
+/* === FAB === */
+.fab{display:none;position:fixed;bottom:calc(24px + var(--safe-b));right:20px;width:60px;height:60px;border-radius:50%;background:var(--accent);color:#fff;border:none;box-shadow:0 4px 16px rgba(199,82,42,.35);font-size:32px;line-height:1;cursor:pointer;z-index:900}
+.fab:active{transform:scale(.92)}
+
+/* === MODAL === */
+.modal-overlay{display:none;position:fixed;inset:0;background:rgba(26,24,20,.4);z-index:1000;align-items:flex-end;justify-content:center;backdrop-filter:blur(2px);-webkit-backdrop-filter:blur(2px)}
+.modal-overlay.open{display:flex}
+.modal-sheet{background:var(--bg-el);width:100%;max-width:540px;max-height:92vh;overflow-y:auto;-webkit-overflow-scrolling:touch;border-radius:16px 16px 0 0;padding:20px 20px calc(20px + var(--safe-b));box-shadow:0 -4px 32px rgba(0,0,0,.1);animation:slideUp .3s ease}
+@keyframes slideUp{from{transform:translateY(100%)}to{transform:translateY(0)}}
+.modal-handle{width:40px;height:4px;background:var(--line);border-radius:2px;margin:0 auto 16px}
+.modal-head{display:flex;justify-content:space-between;align-items:center;margin-bottom:16px}
+.modal-title{font-family:'Fraunces',serif;font-size:20px;font-weight:400}
+.modal-close{width:36px;height:36px;border-radius:50%;background:var(--bg);border:1px solid var(--line);font-size:20px;cursor:pointer;display:flex;align-items:center;justify-content:center;color:var(--ink-soft);font-family:inherit}
+
+/* === TOAST === */
+.toast{position:fixed;bottom:calc(32px + var(--safe-b));left:50%;transform:translateX(-50%) translateY(100px);background:var(--ink);color:var(--bg);padding:12px 24px;border-radius:8px;font-size:14px;font-weight:500;opacity:0;transition:all .3s;z-index:2000;box-shadow:0 8px 24px rgba(0,0,0,.2);max-width:90vw;text-align:center;pointer-events:none}
+.toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
+.toast.error{background:var(--red)}.toast.success{background:var(--green)}
+
+/* === MOBILE === */
+@media(max-width:768px){
+  .app{padding:20px 16px 100px}
+  .app-header{margin-bottom:20px;padding-bottom:16px}
+  h1{font-size:32px}.stat-num{font-size:22px}.stats-inline{gap:14px}
+  .user-email-text{display:none}
+  .main-grid{grid-template-columns:1fr;gap:0}
+  .sidebar{display:none}
+  .fab{display:flex;align-items:center;justify-content:center}
+  .cards{grid-template-columns:1fr;gap:12px}
+  .card{padding:16px}.card-title{font-size:17px}
+  .toolbar{gap:8px}.search{min-width:0;flex-basis:100%}
+  .filter-select{flex:1}
+  .quiz-card{padding:20px}.quiz-card-q{font-size:20px}
+}
+@media(min-width:769px){.fab{display:none!important}.modal-overlay{display:none!important}}
+.hidden-view{display:none!important}
+</style>
+</head>
+<body>
+
+<!-- LOGIN -->
+<div id="login-view" class="login-wrap hidden-view">
+  <div class="login-card">
+    <div class="login-mark">✺</div>
+    <div class="login-title serif">Le <em>carnet</em></div>
+    <div class="login-sub">— apprendre, retenir, partout</div>
+    <form class="login-form" id="login-form">
+      <div class="field"><label>Email</label><input type="email" id="email" placeholder="toi@exemple.com" required autocomplete="email"></div>
+      <div class="field"><label>Mot de passe</label><input type="password" id="password" placeholder="••••••••" required autocomplete="current-password" minlength="6"></div>
+      <button type="submit" class="btn" id="login-btn">Se connecter</button>
+    </form>
+    <div class="login-switch"><span id="switch-text">Pas encore de compte ?</span><button type="button" class="link-btn" id="switch-mode">Créer un compte</button></div>
+    <div id="login-message" class="msg-panel hidden-view"></div>
+  </div>
+</div>
+
+<!-- APP -->
+<div id="app-view" class="app hidden-view">
+  <header class="app-header">
+    <div class="brand"><span class="eyebrow">Culture générale</span><h1 class="serif">Le <em>carnet</em></h1></div>
+    <div class="header-right">
+      <div class="stats-inline">
+        <div class="stat"><span class="stat-num serif" id="stat-total">0</span><span class="stat-label">fiches</span></div>
+        <div class="stat"><span class="stat-num serif" id="stat-acquired" style="color:var(--green)">0</span><span class="stat-label">acquises</span></div>
+        <div class="stat"><span class="stat-num serif" id="stat-progress" style="color:var(--amber)">0</span><span class="stat-label">en cours</span></div>
+      </div>
+      <div class="user-menu"><span id="user-email" class="user-email-text"></span><button class="logout-btn" id="logout">Déco</button></div>
+    </div>
+  </header>
+
+  <!-- TABS -->
+  <div class="tabs">
+    <button class="tab active" data-tab="fiches">📚 Mes fiches</button>
+    <button class="tab" data-tab="quiz">🎯 Quizz</button>
+  </div>
+
+  <!-- TAB: FICHES -->
+  <div id="tab-fiches">
+    <div class="main-grid">
+      <aside class="sidebar">
+        <div class="form-title serif">Nouvelle fiche</div>
+        <div class="form-sub">— un savoir à retenir</div>
+        <form id="add-form-desktop">
+          <div class="field"><label>Catégorie</label><select id="fd-cat" required></select></div>
+          <div class="field"><label>Titre</label><input type="text" id="fd-title" placeholder="Ex : La chute du mur de Berlin" required></div>
+          <div class="field"><label>Contenu</label><textarea id="fd-body" placeholder="Les infos à retenir : faits, dates, détails..." required style="min-height:100px"></textarea></div>
+          <div class="field"><label>Commentaire · optionnel</label><textarea id="fd-comment" placeholder="Anecdote, source, lien..."></textarea></div>
+          <div class="field"><label>Niveau</label><select id="fd-level"><option value="new">🔴 Nouveau</option><option value="progress">🟡 En cours</option><option value="acquired">🟢 Acquis</option></select></div>
+          <button type="submit" class="btn" id="submit-desktop">Ajouter la fiche</button>
+        </form>
+      </aside>
+      <main class="content">
+        <div class="toolbar">
+          <div class="search"><input type="text" id="search" placeholder="Chercher..."></div>
+          <select class="filter-select" id="filter-level"><option value="all">Tous niveaux</option><option value="new">🔴 Nouveau</option><option value="progress">🟡 En cours</option><option value="acquired">🟢 Acquis</option></select>
+        </div>
+        <div class="chips" id="chips"></div>
+        <div class="cards" id="cards"><div class="empty"><div class="empty-icon">ø</div><div class="empty-text">Chargement...</div></div></div>
+      </main>
+    </div>
+  </div>
+
+  <!-- TAB: QUIZ -->
+  <div id="tab-quiz" class="hidden-view">
+    <!-- Setup -->
+    <div id="quiz-setup" class="quiz-setup">
+      <div class="quiz-setup-title">Teste tes connaissances</div>
+      <div class="quiz-setup-sub">L'IA génère des questions à partir de tes fiches</div>
+      <div class="quiz-options">
+        <div class="field"><label>Catégorie</label><select id="qz-cat"><option value="all">Toutes les catégories</option></select></div>
+        <div class="field"><label>Mode</label><select id="qz-mode"><option value="qcm">QCM (4 choix)</option><option value="open">Question ouverte</option><option value="mix">Mix des deux</option></select></div>
+        <div class="field"><label>Nombre de questions</label><select id="qz-count"><option value="5">5 questions</option><option value="10" selected>10 questions</option><option value="15">15 questions</option><option value="20">20 questions</option></select></div>
+      </div>
+      <div class="quiz-start"><button class="btn btn-accent" id="quiz-start-btn">Lancer le quizz 🚀</button></div>
+      <div id="quiz-min-warning" class="hidden-view" style="margin-top:16px;font-size:13px;color:var(--red)"></div>
+    </div>
+    <!-- Loading -->
+    <div id="quiz-loading" class="quiz-loading hidden-view"><div class="spinner"></div><div class="quiz-loading-text">L'IA prépare tes questions...</div></div>
+    <!-- Playing -->
+    <div id="quiz-play" class="quiz-area hidden-view"></div>
+    <!-- Results -->
+    <div id="quiz-results" class="quiz-results hidden-view"></div>
+  </div>
+</div>
+
+<!-- FAB -->
+<button class="fab" id="fab" aria-label="Ajouter une fiche">+</button>
+
+<!-- MODAL (mobile) -->
+<div class="modal-overlay" id="modal">
+  <div class="modal-sheet">
+    <div class="modal-handle"></div>
+    <div class="modal-head"><div class="modal-title serif">Nouvelle fiche</div><button type="button" class="modal-close" id="modal-close">✕</button></div>
+    <form id="add-form-mobile">
+      <div class="field"><label>Catégorie</label><select id="fm-cat" required></select></div>
+      <div class="field"><label>Titre</label><input type="text" id="fm-title" placeholder="Ex : La chute du mur de Berlin" required></div>
+      <div class="field"><label>Contenu</label><textarea id="fm-body" placeholder="Les infos à retenir..." required style="min-height:80px"></textarea></div>
+      <div class="field"><label>Commentaire · optionnel</label><textarea id="fm-comment" placeholder="Anecdote, source..."></textarea></div>
+      <div class="field"><label>Niveau</label><select id="fm-level"><option value="new">🔴 Nouveau</option><option value="progress">🟡 En cours</option><option value="acquired">🟢 Acquis</option></select></div>
+      <button type="submit" class="btn" id="submit-mobile">Ajouter la fiche</button>
+    </form>
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script type="module">
+import { createClient } from 'https://esm.sh/@supabase/supabase-js@2';
+
+const supabase = createClient(
+  'https://vsmmoqghrgqgpfmpxnzb.supabase.co',
+  'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InZzbW1vcWdocmdxZ3BmbXB4bnpiIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzYzMzMyNzQsImV4cCI6MjA5MTkwOTI3NH0.jRroMcMGP_ENVY4Y3wxqBOWzVeXvxdCVuj2S_mdHrb8'
+);
+
+const CATS = [
+  {id:"histoire",label:"Histoire"},{id:"litterature",label:"Littérature"},
+  {id:"arts",label:"Arts & Peinture"},{id:"cinema",label:"Cinéma & Séries"},
+  {id:"musique",label:"Musique"},{id:"sciences",label:"Sciences"},
+  {id:"geo",label:"Géographie"},{id:"philo",label:"Philosophie"},
+  {id:"sport",label:"Sport"},{id:"jv",label:"Jeux vidéo"},
+  {id:"gastro",label:"Gastronomie"},{id:"divers",label:"Divers / Pop culture"}
+];
+const LEVELS = {new:{label:"🔴 Nouveau",cls:"new"},progress:{label:"🟡 En cours",cls:"progress"},acquired:{label:"🟢 Acquis",cls:"acquired"}};
+
+let fiches=[],activeCat="all",activeLevel="all",searchTerm="",currentUser=null;
+let quizQuestions=[],quizIdx=0,quizScore=0,quizAnswered=false;
+
+const $=id=>document.getElementById(id);
+const esc=s=>{const d=document.createElement("div");d.textContent=s||"";return d.innerHTML};
+const catLabel=id=>CATS.find(c=>c.id===id)?.label||id;
+
+function showToast(m,t=""){const e=$("toast");e.textContent=m;e.className="toast"+(t?" "+t:"");e.classList.add("show");clearTimeout(showToast._t);showToast._t=setTimeout(()=>e.classList.remove("show"),2500)}
+
+// === AUTH ===
+async function checkAuth(){const{data:{session}}=await supabase.auth.getSession();if(session){currentUser=session.user;showApp();await loadFiches();subscribeRT()}else showLogin()}
+function showLogin(){$("login-view").classList.remove("hidden-view");$("app-view").classList.add("hidden-view");$("fab").style.display="none"}
+function showApp(){$("login-view").classList.add("hidden-view");$("app-view").classList.remove("hidden-view");$("user-email").textContent=currentUser.email}
+
+let isSignUp=false;
+function updSwitch(){$("switch-text").textContent=isSignUp?"Déjà un compte ?":"Pas encore de compte ?";$("switch-mode").textContent=isSignUp?"Se connecter":"Créer un compte";$("login-btn").textContent=isSignUp?"Créer le compte":"Se connecter"}
+$("switch-mode").addEventListener("click",()=>{isSignUp=!isSignUp;updSwitch();$("login-message").classList.add("hidden-view")});
+
+$("login-form").addEventListener("submit",async e=>{
+  e.preventDefault();const email=$("email").value.trim(),pw=$("password").value,btn=$("login-btn");
+  btn.disabled=true;btn.textContent=isSignUp?"Création...":"Connexion...";$("login-message").classList.add("hidden-view");
+  let error;
+  if(isSignUp){const r=await supabase.auth.signUp({email,password:pw});error=r.error;if(!error&&!r.data.session){$("login-message").innerHTML="<strong>✓ Compte créé !</strong><br>Connecte-toi.";$("login-message").classList.remove("hidden-view");btn.disabled=false;isSignUp=false;updSwitch();return}}
+  else{const r=await supabase.auth.signInWithPassword({email,password:pw});error=r.error}
+  btn.disabled=false;updSwitch();if(error)showToast(error.message,"error")
+});
+$("logout").addEventListener("click",async()=>{await supabase.auth.signOut();fiches=[];currentUser=null;showLogin()});
+supabase.auth.onAuthStateChange((ev,sess)=>{if(ev==="SIGNED_IN"&&sess){currentUser=sess.user;showApp();loadFiches().then(subscribeRT)}});
+
+// === DATA ===
+async function loadFiches(){
+  const{data,error}=await supabase.from("fiches").select("*").order("created_at",{ascending:false});
+  fiches=error?[]:(data||[]);if(error)showToast("Erreur: "+error.message,"error");render()
+}
+let rtSubscribed=false;
+function subscribeRT(){if(rtSubscribed)return;rtSubscribed=true;supabase.channel("sync").on("postgres_changes",{event:"*",schema:"public",table:"fiches",filter:`user_id=eq.${currentUser.id}`},()=>loadFiches()).subscribe()}
+
+async function addFiche(cat,title,body,comment,level,btn){
+  btn.disabled=true;
+  const{error}=await supabase.from("fiches").insert({user_id:currentUser.id,cat:cat.value,title:title.value.trim(),body:body.value.trim(),comment:comment.value.trim()||null,level:level.value});
+  btn.disabled=false;
+  if(error){showToast("Erreur: "+error.message,"error");return false}
+  showToast("Fiche ajoutée ✓","success");return true
+}
+
+// === FORMS ===
+function popSel(sel){CATS.forEach(c=>{const o=document.createElement("option");o.value=c.id;o.textContent=c.label;sel.appendChild(o)})}
+function initForms(){
+  popSel($("fd-cat"));popSel($("fm-cat"));
+  // quiz cat select
+  CATS.forEach(c=>{const o=document.createElement("option");o.value=c.id;o.textContent=c.label;$("qz-cat").appendChild(o)});
+
+  $("add-form-desktop").addEventListener("submit",async e=>{e.preventDefault();if(await addFiche($("fd-cat"),$("fd-title"),$("fd-body"),$("fd-comment"),$("fd-level"),$("submit-desktop")))e.target.reset()});
+  $("add-form-mobile").addEventListener("submit",async e=>{e.preventDefault();if(await addFiche($("fm-cat"),$("fm-title"),$("fm-body"),$("fm-comment"),$("fm-level"),$("submit-mobile"))){e.target.reset();closeModal()}});
+}
+
+// === MODAL ===
+function openModal(){$("modal").classList.add("open");document.body.style.overflow="hidden"}
+function closeModal(){$("modal").classList.remove("open");document.body.style.overflow=""}
+$("fab").addEventListener("click",openModal);$("modal-close").addEventListener("click",closeModal);
+$("modal").addEventListener("click",e=>{if(e.target===$("modal"))closeModal()});
+
+// === TABS ===
+document.querySelectorAll(".tab").forEach(t=>{
+  t.addEventListener("click",()=>{
+    document.querySelectorAll(".tab").forEach(x=>x.classList.remove("active"));
+    t.classList.add("active");
+    const tab=t.dataset.tab;
+    $("tab-fiches").classList.toggle("hidden-view",tab!=="fiches");
+    $("tab-quiz").classList.toggle("hidden-view",tab!=="quiz");
+    // Show/hide FAB only in fiches tab
+    if(tab==="quiz")$("fab").style.display="none";
+    else $("fab").style.display="";
+  })
+});
+
+// === RENDER ===
+function renderStats(){
+  $("stat-total").textContent=fiches.length;
+  $("stat-acquired").textContent=fiches.filter(f=>f.level==="acquired").length;
+  $("stat-progress").textContent=fiches.filter(f=>f.level==="progress").length;
+}
+
+function renderChips(){
+  const counts={all:fiches.length};CATS.forEach(c=>counts[c.id]=0);fiches.forEach(f=>counts[f.cat]=(counts[f.cat]||0)+1);
+  const w=$("chips");w.innerHTML="";
+  const mk=(id,lbl,cnt)=>{const el=document.createElement("button");el.type="button";el.className="chip"+(activeCat===id?" active":"");el.innerHTML=`${lbl} <span class="count">${cnt}</span>`;el.onclick=()=>{activeCat=id;render()};w.appendChild(el)};
+  mk("all","Toutes",counts.all);
+  CATS.forEach(c=>{if(counts[c.id]>0||activeCat===c.id)mk(c.id,c.label,counts[c.id])});
+}
+
+function renderCards(){
+  let list=fiches;
+  if(activeCat!=="all")list=list.filter(f=>f.cat===activeCat);
+  if(activeLevel!=="all")list=list.filter(f=>f.level===activeLevel);
+  if(searchTerm){const s=searchTerm.toLowerCase();list=list.filter(f=>(f.title||"").toLowerCase().includes(s)||(f.body||"").toLowerCase().includes(s)||(f.comment||"").toLowerCase().includes(s))}
+
+  const w=$("cards");w.innerHTML="";
+  if(!list.length){w.innerHTML=`<div class="empty"><div class="empty-icon">ø</div><div class="empty-text">${fiches.length?"Rien ici":"Ton carnet est vide"}</div><div class="empty-sub">${fiches.length?"Change les filtres":"Ajoute ta première fiche"}</div></div>`;return}
+
+  list.forEach(f=>{
+    const lev=LEVELS[f.level]||LEVELS.new;
+    const card=document.createElement("article");card.className="card";
+    card.innerHTML=`
+      <div class="card-head"><span class="card-cat">${catLabel(f.cat)}</span><span class="card-dot ${lev.cls}" title="${lev.label}"></span></div>
+      <div class="card-title serif">${esc(f.title)}</div>
+      <div class="card-body">${esc(f.body)}</div>
+      ${f.comment?`<div class="card-comment">${esc(f.comment)}</div>`:""}
+      <div class="card-actions">
+        <button class="card-btn" data-action="cycle" data-id="${f.id}">Niveau ↑</button>
+        <button class="card-btn danger" data-action="delete" data-id="${f.id}">Supprimer</button>
+      </div>`;
+    w.appendChild(card)
+  });
+
+  w.querySelectorAll(".card-btn").forEach(btn=>{
+    btn.addEventListener("click",async e=>{
+      e.stopPropagation();const id=btn.dataset.id,f=fiches.find(x=>x.id===id);if(!f)return;
+      if(btn.dataset.action==="delete"){if(!confirm("Supprimer cette fiche ?"))return;const{error}=await supabase.from("fiches").delete().eq("id",id);if(error)showToast("Erreur","error");else showToast("Supprimée","success")}
+      else{const order=["new","progress","acquired"],next=order[(order.indexOf(f.level)+1)%3];const{error}=await supabase.from("fiches").update({level:next}).eq("id",id);if(error)showToast("Erreur","error");else showToast(LEVELS[next].label,"success")}
+    })
+  })
+}
+
+function render(){renderStats();renderChips();renderCards()}
+
+// === EVENTS ===
+$("search").addEventListener("input",e=>{searchTerm=e.target.value;renderCards()});
+$("filter-level").addEventListener("change",e=>{activeLevel=e.target.value;renderCards()});
+
+// ============================================================
+// QUIZ ENGINE — Claude generates questions from fiches
+// ============================================================
+$("quiz-start-btn").addEventListener("click",startQuiz);
+
+async function startQuiz(){
+  const cat=$("qz-cat").value;
+  const mode=$("qz-mode").value;
+  const count=parseInt($("qz-count").value);
+
+  let pool=fiches;
+  if(cat!=="all")pool=pool.filter(f=>f.cat===cat);
+
+  if(pool.length<3){$("quiz-min-warning").textContent="Il te faut au moins 3 fiches pour lancer un quizz.";$("quiz-min-warning").classList.remove("hidden-view");return}
+  $("quiz-min-warning").classList.add("hidden-view");
+
+  $("quiz-setup").classList.add("hidden-view");
+  $("quiz-loading").classList.remove("hidden-view");
+
+  const fichesText=pool.map((f,i)=>`[Fiche ${i+1}] Catégorie: ${catLabel(f.cat)} | Titre: ${f.title}\n${f.body}${f.comment?"\nNote: "+f.comment:""}`).join("\n\n");
+
+  const modeInstr = mode==="qcm"
+    ? 'Génère UNIQUEMENT des QCM. Chaque question a 4 options (A, B, C, D) dont une seule est correcte.'
+    : mode==="open"
+    ? 'Génère UNIQUEMENT des questions ouvertes. Donne la réponse attendue.'
+    : 'Alterne entre QCM et questions ouvertes (environ moitié-moitié).';
+
+  const prompt = `Tu es un générateur de quizz de culture générale. À partir des fiches ci-dessous, génère exactement ${count} questions variées et intéressantes pour tester les connaissances.
+
+${modeInstr}
+
+IMPORTANT : Réponds UNIQUEMENT avec un tableau JSON valide, sans aucun texte avant ou après, sans backticks markdown. Le format exact :
+
+Pour un QCM :
+{"type":"qcm","category":"...","question":"...","options":["A","B","C","D"],"correct":0,"explanation":"..."}
+
+Pour une question ouverte :
+{"type":"open","category":"...","question":"...","answer":"...","explanation":"..."}
+
+Le champ "correct" est l'index (0-3) de la bonne réponse dans le tableau options.
+Le champ "explanation" est une phrase courte expliquant la réponse.
+
+FICHES :
+${fichesText}
+
+Génère le tableau JSON de ${count} questions :`;
+
+  try {
+    const response = await fetch("/.netlify/functions/quiz", {
+      method: "POST",
+      headers: {"Content-Type": "application/json"},
+      body: JSON.stringify({
+        model: "gpt-4o-mini",
+        max_tokens: 4000,
+        messages: [
+          {role: "system", content: "Tu es un générateur de quizz. Réponds UNIQUEMENT avec un tableau JSON valide, sans texte ni backticks markdown."},
+          {role: "user", content: prompt}
+        ]
+      })
+    });
+
+    if (!response.ok) {
+      const errData = await response.json().catch(() => ({}));
+      throw new Error(errData.error || "Erreur API " + response.status);
+    }
+
+    const data = await response.json();
+    const text = data.content?.map(b => b.text || "").join("") || "";
+    const clean = text.replace(/```json|```/g, "").trim();
+    quizQuestions = JSON.parse(clean);
+    quizIdx = 0;
+    quizScore = 0;
+    quizAnswered = false;
+
+    $("quiz-loading").classList.add("hidden-view");
+    $("quiz-play").classList.remove("hidden-view");
+    renderQuizQuestion();
+  } catch (err) {
+    console.error(err);
+    $("quiz-loading").classList.add("hidden-view");
+    $("quiz-setup").classList.remove("hidden-view");
+    showToast(err.message || "Erreur lors de la génération", "error");
+  }
+}
+
+function renderQuizQuestion(){
+  const q = quizQuestions[quizIdx];
+  const wrap = $("quiz-play");
+  quizAnswered = false;
+
+  const progress = `<div class="quiz-progress">
+    <span>Question ${quizIdx+1}/${quizQuestions.length}</span>
+    <div class="quiz-bar"><div class="quiz-bar-fill" style="width:${((quizIdx)/quizQuestions.length)*100}%"></div></div>
+    <span class="quiz-score">${quizScore} ✓</span>
+  </div>`;
+
+  if(q.type === "qcm"){
+    const letters = ["A","B","C","D"];
+    const optsHtml = q.options.map((o,i) =>
+      `<button class="qcm-opt" data-idx="${i}"><span class="letter">${letters[i]}</span><span>${esc(o)}</span></button>`
+    ).join("");
+
+    wrap.innerHTML = `${progress}
+      <div class="quiz-card">
+        <div class="quiz-card-cat">${esc(q.category || "")}</div>
+        <div class="quiz-card-q serif">${esc(q.question)}</div>
+        <div class="qcm-options" id="qcm-opts">${optsHtml}</div>
+        <div id="quiz-explanation" class="hidden-view" style="margin-top:16px;padding:12px;background:var(--bg);border-radius:6px;font-size:14px;color:var(--ink-soft)"></div>
+        <div class="quiz-next hidden-view" id="quiz-next-wrap"><button id="quiz-next-btn">Suivante →</button></div>
+      </div>`;
+
+    wrap.querySelectorAll(".qcm-opt").forEach(btn => {
+      btn.addEventListener("click", () => {
+        if(quizAnswered) return;
+        quizAnswered = true;
+        const chosen = parseInt(btn.dataset.idx);
+        const correct = q.correct;
+
+        wrap.querySelectorAll(".qcm-opt").forEach((b,i) => {
+          b.classList.add("disabled");
+          if(i === correct) b.classList.add("correct");
+          if(i === chosen && chosen !== correct) b.classList.add("wrong");
+        });
+
+        if(chosen === correct) quizScore++;
+        wrap.querySelector(".quiz-score").textContent = quizScore + " ✓";
+
+        if(q.explanation){$("quiz-explanation").textContent = q.explanation;$("quiz-explanation").classList.remove("hidden-view")}
+        $("quiz-next-wrap").classList.remove("hidden-view");
+      });
+    });
+
+  } else {
+    // Open question
+    wrap.innerHTML = `${progress}
+      <div class="quiz-card">
+        <div class="quiz-card-cat">${esc(q.category || "")}</div>
+        <div class="quiz-card-q serif">${esc(q.question)}</div>
+        <div class="open-answer-zone">
+          <div class="open-reveal" id="open-reveal">
+            <button class="btn btn-outline" id="reveal-btn" style="width:auto;padding:12px 24px">Révéler la réponse</button>
+          </div>
+          <div id="open-result" class="hidden-view">
+            <div class="open-answer">${esc(q.answer)}</div>
+            ${q.explanation ? `<div style="font-size:13px;color:var(--ink-soft);margin-bottom:16px;font-style:italic">${esc(q.explanation)}</div>` : ""}
+            <div style="font-size:13px;color:var(--ink-soft);margin-bottom:10px;text-align:center">Tu avais la bonne réponse ?</div>
+            <div class="open-self">
+              <button class="good" data-ok="1">✓ Oui</button>
+              <button class="bad" data-ok="0">✗ Non</button>
+            </div>
+          </div>
+        </div>
+        <div class="quiz-next hidden-view" id="quiz-next-wrap"><button id="quiz-next-btn">Suivante →</button></div>
+      </div>`;
+
+    $("reveal-btn").addEventListener("click", () => {
+      $("open-reveal").classList.add("hidden-view");
+      $("open-result").classList.remove("hidden-view");
+    });
+
+    wrap.querySelectorAll(".open-self button").forEach(btn => {
+      btn.addEventListener("click", () => {
+        if(quizAnswered) return;
+        quizAnswered = true;
+        if(btn.dataset.ok === "1") quizScore++;
+        wrap.querySelector(".quiz-score").textContent = quizScore + " ✓";
+        wrap.querySelectorAll(".open-self button").forEach(b => b.disabled = true);
+        btn.style.opacity = "1";
+        $("quiz-next-wrap").classList.remove("hidden-view");
+      });
+    });
+  }
+
+  // Next button
+  const nextBtn = $("quiz-next-btn");
+  if(nextBtn) {
+    nextBtn.addEventListener("click", () => {
+      quizIdx++;
+      if(quizIdx >= quizQuestions.length) showQuizResults();
+      else renderQuizQuestion();
+    });
+    // Change text on last question
+    if(quizIdx === quizQuestions.length - 1) nextBtn.textContent = "Voir les résultats →";
+  }
+}
+
+function showQuizResults(){
+  $("quiz-play").classList.add("hidden-view");
+  const pct = Math.round((quizScore / quizQuestions.length) * 100);
+  const r = $("quiz-results");
+  r.classList.remove("hidden-view");
+  r.innerHTML = `
+    <div class="quiz-results-score serif">${pct}%</div>
+    <div class="quiz-results-label">${quizScore} / ${quizQuestions.length} bonnes réponses</div>
+    <div class="quiz-results-actions">
+      <button style="background:var(--accent);color:var(--bg)" id="quiz-retry">Relancer 🔄</button>
+      <button style="background:var(--ink);color:var(--bg)" id="quiz-back">Retour aux fiches</button>
+    </div>`;
+
+  $("quiz-retry").addEventListener("click", () => {
+    r.classList.add("hidden-view");
+    $("quiz-setup").classList.remove("hidden-view");
+  });
+  $("quiz-back").addEventListener("click", () => {
+    r.classList.add("hidden-view");
+    $("quiz-setup").classList.remove("hidden-view");
+    document.querySelector('[data-tab="fiches"]').click();
+  });
+}
+
+// === BOOT ===
+initForms();
+checkAuth();
+</script>
+</body>
+</html>
