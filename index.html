@@ -628,8 +628,13 @@ function submitQuiz(){
     }else{
       statusClass="answered";
       answerHtml=`<div class="review-answer"><strong>Réponse attendue</strong>${esc(q.answer)}</div>`;
-      answerHtml+=`<div class="review-user"><strong>Ta réponse</strong>${esc(res.userAnswer)}</div>`;
-      if(q.explanation)answerHtml+=`<div class="review-explanation">${esc(q.explanation)}</div>`
+      const userAns=res.userAnswer;
+      answerHtml+=`<div class="review-user" style="background:var(--amber-soft);border-left-color:var(--amber)"><strong style="color:var(--amber)">Ta réponse</strong>${esc(userAns)}</div>`;
+      if(q.explanation)answerHtml+=`<div class="review-explanation">${esc(q.explanation)}</div>`;
+      answerHtml+=`<div class="open-judge" data-qidx="${i}" style="display:flex;gap:10px;margin-top:12px;justify-content:center">
+        <button class="judge-btn good" data-ok="1" style="padding:8px 20px;border-radius:6px;font-family:inherit;font-size:13px;font-weight:600;cursor:pointer;border:1px solid var(--green);color:var(--green);background:var(--bg-el)">✓ J'avais bon</button>
+        <button class="judge-btn bad" data-ok="0" style="padding:8px 20px;border-radius:6px;font-family:inherit;font-size:13px;font-weight:600;cursor:pointer;border:1px solid var(--red);color:var(--red);background:var(--bg-el)">✗ J'avais faux</button>
+      </div>`
     }
 
     reviewHtml+=`<div class="quiz-card" style="margin-bottom:16px">
@@ -639,14 +644,41 @@ function submitQuiz(){
     </div>`
   });
 
+  const openCount=quizQuestions.filter(q=>q.type==="open").length;
+
   r.innerHTML=`
-    ${pct!==null?`<div class="quiz-results-score serif">${pct}%</div>`:""}
-    <div class="quiz-results-label">${scoreText}${qcmCount>0&&quizQuestions.some(q=>q.type==="open")?" · Vérifie tes réponses ouvertes ci-dessous":""}</div>
+    <div id="score-display">
+      ${pct!==null?`<div class="quiz-results-score serif">${pct}%</div>`:""}
+      <div class="quiz-results-label" id="score-label">${scoreText}${openCount>0?" · Évalue tes réponses ouvertes ci-dessous":""}</div>
+    </div>
     <div style="max-width:680px;margin:0 auto;text-align:left">${reviewHtml}</div>
     <div class="quiz-results-actions" style="margin-top:32px">
       <button style="background:var(--accent);color:var(--bg)" id="quiz-retry">Relancer 🔄</button>
       <button style="background:var(--ink);color:var(--bg)" id="quiz-back">Retour aux fiches</button>
     </div>`;
+
+  // Auto-eval listeners for open questions
+  let openScore=0,openJudged=0;
+  r.querySelectorAll(".judge-btn").forEach(btn=>{
+    btn.addEventListener("click",()=>{
+      const wrap=btn.closest(".open-judge");
+      if(wrap.dataset.done)return;
+      wrap.dataset.done="1";
+      const ok=btn.dataset.ok==="1";
+      if(ok){openScore++;score++}
+      openJudged++;
+      // Style the chosen button, disable both
+      wrap.querySelectorAll(".judge-btn").forEach(b=>{b.style.opacity="0.4";b.style.cursor="default"});
+      btn.style.opacity="1";
+      if(ok){btn.style.background="var(--green-soft)"}else{btn.style.background="var(--red-soft)"}
+      // Update score display
+      const totalQ=quizQuestions.length;
+      const newPct=Math.round((score/totalQ)*100);
+      const scoreDisp=$("score-display");
+      const remaining=openCount-openJudged;
+      scoreDisp.innerHTML=`<div class="quiz-results-score serif">${newPct}%</div><div class="quiz-results-label">${score}/${totalQ} bonne${score>1?"s":""} réponse${score>1?"s":""}${remaining>0?" · "+remaining+" à évaluer":""}</div>`;
+    })
+  });
 
   $("quiz-retry").onclick=()=>{r.classList.add("hidden-view");$("quiz-setup").classList.remove("hidden-view")};
   $("quiz-back").onclick=()=>{r.classList.add("hidden-view");$("quiz-setup").classList.remove("hidden-view");document.querySelector('[data-tab="fiches"]').click()}
